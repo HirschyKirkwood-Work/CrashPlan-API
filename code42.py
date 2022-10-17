@@ -5,13 +5,14 @@ from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from dotenv import load_dotenv
 import os
-load_dotenv()
+from pathlib import Path
 #TODO Users with no accounts, users with accounts but no backups, users with accounts and bad backups.
 
+dotenv_path = Path('creds.env')
+load_dotenv(dotenv_path=dotenv_path)
 URL =  'https://console.us2.crashplan.com/api/v3/auth/jwt?useBody=true'
-UNAME = os.environ.get('UNAME')
-PWORD =  os.environ.get('PWORD')
-print(UNAME, PWORD)
+UNAME = os.environ.get('username')
+PWORD =  os.environ.get('password')
 SDK = py42.sdk.from_local_account(URL, UNAME, PWORD)
 
 

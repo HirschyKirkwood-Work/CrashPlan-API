@@ -39,7 +39,7 @@ def get_machines(UID):
 				# 'parentComputerId': None,'parentComputerGuid': None,
 				# 'lastConnected': '2022-02-16T18:33:39.479Z','osName': 'win64',
 				# 'osVersdeptn': '10.0.19042','osArch': 'amd64',
-				# 'address': '128.2.122.231:4247','remoteAddress': '128.2.122.231',
+				# 'address': 'REDACTED','remoteAddress': 'REDACTED',
 				# 'javaVersdeptn': '', 'modelInfo': '',
 				# 'timeZone': 'America/New_York',43'versdeptn': 1525200006882,
 				# 'productVersdeptn': '8.8.2','buildVersdeptn': 143,

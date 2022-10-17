@@ -3,11 +3,15 @@ import py42.sdk
 import csv
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
+#TODO Users with no accounts, users with accounts but no backups, users with accounts and bad backups.
 
 URL =  'https://console.us2.crashplan.com/api/v3/auth/jwt?useBody=true'
-UNAME = "dsp-crshpln-svc@andrew.cmu.edu"
-PWORD =  'Dud30fL1f3!' #TODO Remove PT password
+UNAME = os.environ.get('UNAME')
+PWORD =  os.environ.get('PWORD')
+print(UNAME, PWORD)
 SDK = py42.sdk.from_local_account(URL, UNAME, PWORD)
 
 

@@ -48,7 +48,7 @@ def get_machines(UID):
 				# 'creatdeptnDate': '2020-07-13T10:14:14.594Z','modificatdeptnDate': '2022-10-13T16:14:02.734Z',
 				# 'loginDate': '2022-02-16T15:13:59.460Z', 'service': 'CrashPlan'}
 
-	machine_response = SDK.devices.get_all(active=True)
+	machine_response = SDK.devices.get_all(active=True, page_size=20000)
 	for page in machine_response:
 	    devices = page["computers"]
 	    user_devices = {}

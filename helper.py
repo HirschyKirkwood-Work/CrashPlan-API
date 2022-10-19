@@ -115,6 +115,22 @@ def sed_inplace(filename, pattern, repl):
     shutil.copystat(filename, tmp_file.name)
     shutil.move(tmp_file.name, filename)
 
+def return_no_backup(users):
+	return_value = []
+	for user,UID in users.items():
+		if len(get_machines(UID).items()) == 0:
+			return_value.append(user)
+	return return_value
+
+def return_dept_dict(cp_all, dept_all):
+	no_acc = no_account(dept_all, cp_all)	
+	return_value = {}
+	for member in dept_all:
+		if member not in no_acc:
+			return_value[member] = cp_all[member]
+	return return_value
+
+	
 
 def user_machine_status(UID):
 	#print(f"Length: {len(get_machines(UID).items())}")

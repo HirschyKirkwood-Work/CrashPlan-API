@@ -18,13 +18,16 @@ def get_grouper():
 def main():
 	user_file, cp_all_users, dept_members  = get_grouper()
 	no_acc = no_account(dept_members, cp_all_users)
-	for user in dept_members:
+	dept_dict = return_dept_dict(cp_all_users, dept_members)
+	# for user in dept_members:
+	# 	print(user)
+	# 	if user in no_acc:
+	# 		print(f"No Account: {user}\n")
+	# 		continue
+		# current = cp_all_users[user]
+	for user,UID in dept_dict.items():
 		print(user)
-		if user in no_acc:
-			print(f"No Account: {user}\n")
-			continue
-		current = cp_all_users[user]
-		user_machine_status(current)
+		user_machine_status(UID)
 		print("\n")
 
 def no_backup():
@@ -32,16 +35,7 @@ def no_backup():
 	dept_dict = return_dept_dict(cp_all_users, dept_members)
 	for user in return_no_backup(dept_dict):
 		print(user)
-	# for member in dept_members:
-	# 	if member not in no_acc:
-			
-	# # for user in dept_members:
-	# 	no_acc = no_account(dept_members, cp_all_users)
-	# 	if user in no_acc:
-	# 		continue
-	# 	current = cp_all_users[user]
-	# 	user_machine_status(current, no_machine=True, usr=user)
-	# 	print("\n")
+
 
 def accountless():
 	user_file, cp_all_users, dept_members = get_grouper()
@@ -71,13 +65,13 @@ if __name__ == '__main__':
 		print("Checking for users with no account in CrashPlan")
 		accountless()
 	elif answer == "2":
-		print("Running option 2")
+		print("Checking for users without backups on record.")
 		no_backup()
 	elif answer == "3":
-		print("Running option 3.")
+		print("Showing all users and their status.")
 		main()
 	elif answer == "4":
-		print("Running option 4")
+		print("Checking for accounts with aliases.")
 		aliases()
 	else:
 		print("Invalid option.")

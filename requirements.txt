@@ -1,0 +1,4 @@
+requests
+tk
+python-dotenv
+py42

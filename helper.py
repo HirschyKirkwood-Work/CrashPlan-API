@@ -130,7 +130,6 @@ def return_dept_dict(cp_all, dept_all):
 			return_value[member] = cp_all[member]
 	return return_value
 
-	
 
 def user_machine_status(UID):
 	#print(f"Length: {len(get_machines(UID).items())}")
@@ -141,3 +140,11 @@ def user_machine_status(UID):
 				f"Alert: {value['Alert_State']}, OS: {value['Os_Type']}\n")
 	else:
 		print(f"User with UID {UID} does not have a machine associated with them.")
+
+def get_single_user(andrewID):
+	andrewID = f"{andrewID}@andrew.cmu.edu"
+	cp_all_users = get_users()
+	print(f"The Status of: {andrewID} is:")
+	return_value = user_machine_status(cp_all_users[andrewID])
+
+get_single_user("hkirkwoo")

@@ -50,16 +50,15 @@ Showing all users and their status.
 ⬛⬛⬛@andrew.cmu.edu
 User with UID ⬛⬛⬛⬛⬛ does not have a machine associated with them.
 
+⬛⬛⬛@andrew.cmu.edu does not have an CrashPlan account.
 
 ⬛@andrew.cmu.edu
 Computer name: ⬛⬛⬛
 Status: Active,  Last_Modified: 2022-10-19
 Alert: ['OK'], OS: win64
 
-
 ⬛⬛⬛@andrew.cmu.edu
 User with UID ⬛⬛⬛⬛⬛ does not have a machine associated with them.
-
 
 Duration: 0:00:06.953113
 ```

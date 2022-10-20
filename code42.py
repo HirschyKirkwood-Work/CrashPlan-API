@@ -8,9 +8,9 @@ from helper import *
 
 def get_grouper():
 	user_file = file_dia()
-	sed_inplace(user_file, r'^\"ldap\",', '')
-	sed_inplace(user_file, r'\"sourceId\",\"entityId\"\n', '')
-	sed_inplace(user_file, r'^$', '')
+	sed(user_file, r'^\"ldap\",', '')
+	sed(user_file, r'\"sourceId\",\"entityId\"\n', '')
+	sed(user_file, r'^$', '')
 	cp_all_users = get_users()
 	dept_members = import_users(user_file)
 	return user_file, cp_all_users, dept_members

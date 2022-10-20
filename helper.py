@@ -93,28 +93,6 @@ def file_dia():
 	filename = askopenfilename() # show an "Open" dialog box and return the path to the selected file
 	return filename
 
-def sed_inplace(filename, pattern, repl):
-    '''
-    Perform the pure-Python equivalent of in-place `sed` substitution: e.g.,
-    `sed -i -e 's/'${pattern}'/'${repl}' "${filename}"`.
-    '''
-    # For efficiency, precompile the passed regular expression.
-    pattern_compiled = re.compile(pattern)
-
-    # For portability, NamedTemporaryFile() defaults to mode "w+b" (i.e., binary
-    # writing with updating). This is usually a good thing. In this case,
-    # however, binary writing imposes non-trivial encoding constraints trivially
-    # resolved by switching to text writing. Let's do that.
-    with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_file:
-        with open(filename) as src_file:
-            for line in src_file:
-                tmp_file.write(pattern_compiled.sub(repl, line))
-
-    # Overwrite the original file with the munged temporary file in a
-    # manner preserving file attributes (e.g., permissions).
-    shutil.copystat(filename, tmp_file.name)
-    shutil.move(tmp_file.name, filename)
-
 def return_no_backup(users):
 	return_value = []
 	for user,UID in users.items():
@@ -133,8 +111,9 @@ def return_dept_dict(cp_all, dept_all):
 
 def user_machine_status(UID):
 	#print(f"Length: {len(get_machines(UID).items())}")
-	if len(get_machines(UID).items()) != 0:
-		for key,value in get_machines(UID).items():
+	machine_data = get_machines(UID)
+	if len(machine_data.items()) != 0:
+		for key,value in machine_data.items():
 			print(f"Computer name: {key}\n"
 				f"Status: {value['Status']},  Last_Modified: {value['Last_Modified'][0:10]}\n"
 				f"Alert: {value['Alert_State']}, OS: {value['Os_Type']}\n")
@@ -144,7 +123,14 @@ def user_machine_status(UID):
 def get_single_user(andrewID):
 	andrewID = f"{andrewID}@andrew.cmu.edu"
 	cp_all_users = get_users()
-	print(f"The Status of: {andrewID} is:")
+	print(f"The Status of {andrewID} is:")
 	return_value = user_machine_status(cp_all_users[andrewID])
 
-get_single_user("hkirkwoo")
+def sed(file, pattern, repl):
+	with open(file, "r") as sources:
+		lines = sources.readlines()
+	with open(file, "w") as sources:
+		for line in lines:
+			sources.write(re.sub(pattern, repl, line))
+
+

@@ -118,7 +118,7 @@ def user_machine_status(UID):
 				f"Status: {value['Status']},  Last_Modified: {value['Last_Modified'][0:10]}\n"
 				f"Alert: {value['Alert_State']}, OS: {value['Os_Type']}\n")
 	else:
-		print(f"User with UID {UID} does not have a machine associated with them.")
+		print(f"User with UID {UID} does not have a machine associated with them.\n")
 
 def get_single_user(andrewID):
 	andrewID = f"{andrewID}@andrew.cmu.edu"

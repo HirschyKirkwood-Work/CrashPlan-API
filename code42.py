@@ -18,11 +18,17 @@ def get_grouper():
 def main():
 	user_file, cp_all_users, dept_members  = get_grouper()
 	dept_dict = return_dept_dict(cp_all_users, dept_members)
-
-	for user,UID in dept_dict.items():
-		print(user)
-		user_machine_status(UID)
-		print("\n")
+	no_acc = no_account(dept_members, cp_all_users) # Almost removed this, but not using dept_dict() 
+	for member in dept_members:						# here removes the functionality of showing users w/o accounts, lol
+		if member in no_acc:
+			print(f"{member} does not have an CrashPlan account.\n")
+			continue
+		print(member)
+		user_machine_status(cp_all_users[member])
+	# for user,UID in dept_dict.items():
+	# 	print(user)
+	# 	user_machine_status(UID)
+	# 	print("\n")
 
 def no_backup():
 	user_file, cp_all_users, dept_members  = get_grouper()

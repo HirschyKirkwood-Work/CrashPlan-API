@@ -62,3 +62,12 @@ User with UID ⬛⬛⬛⬛⬛ does not have a machine associated with them.
 
 Duration: 0:00:06.953113
 ```
+## Option 4:
+Shows all account created with an email alias (not @andrew.cmu.edu)
+Example:
+```
+...
+The amount of all Managed Hardware users who have an alias is 72
+This doesn't mean they don't have an actual email associated with their machines and should be checked manually.
+Duration: 0:00:01.799781
+```

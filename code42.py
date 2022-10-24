@@ -15,7 +15,7 @@ def get_grouper(): # Recieves file from user, formats it as needed, get all CP u
 	dept_members = import_users(user_file)
 	return user_file, cp_all_users, dept_members
 
-def main(): # Rename eventually. This function returns the most info to user
+def full_report(): # Rename eventually. This function returns the most info to user
 	user_file, cp_all_users, dept_members  = get_grouper()
 	no_acc = no_account(dept_members, cp_all_users) # Almost removed this, but not using dept_dict() 
 	for member in dept_members:						# here removes the functionality of showing users w/o accounts, lol
@@ -53,7 +53,8 @@ def aliases(): # Gets all users without @andrew
 	print(f"The amount of all Managed Hardware users who have an alias is {count}\n"
 		"This doesn't mean they don't have an actual email associated with their machines and should be checked manually.")
 
-if __name__ == '__main__':
+
+def main():
 	print("Show users with no account based on grouper: 1\n" # Prints info
 		"Show users with an account but not a backup: 2\n"
 		"Combine 1 and 2: 3\n"
@@ -68,7 +69,7 @@ if __name__ == '__main__':
 		no_backup()
 	elif answer == "3":
 		print("Showing all users and their status.")
-		main()
+		full_report()
 	elif answer == "4":
 		print("Checking for accounts with aliases.")
 		aliases()
@@ -76,11 +77,10 @@ if __name__ == '__main__':
 		print("Invalid option.")
 	end_time = datetime.now()
 	print(f'Duration: {end_time - start_time}') # Prints time taken
-	# accountless()
-	# no_backup()
-	# main()
-	# aliases()
 
+
+if __name__ == '__main__':
+	main()
 
 
 

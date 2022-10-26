@@ -6,6 +6,8 @@ cd CrashPlan-API
 # Install Requirements
 `pip3 install -r requirements.txt`
 
+On Mac, I had to use brew to `brew install python-tk` to get the dep to work even though pip does have a package シ 
+
 # Usage
 
 `./code42.py`

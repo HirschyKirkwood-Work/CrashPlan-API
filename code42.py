@@ -7,7 +7,7 @@ from helper import *
 #TODO List all non-@andrew/alias emails (done).
 
 def get_grouper(): # Recieves file from user, formats it as needed, get all CP users and returns values
-	user_file = file_dia()
+	user_file :str = file_dia()
 	sed(user_file, r'^\"ldap\",', '')
 	sed(user_file, r'\"sourceId\",\"entityId\"\n', '')
 	sed(user_file, r'^$', '')
@@ -27,8 +27,8 @@ def full_report(): # Rename eventually. This function returns the most info to u
 
 def no_backup(): # Checks for users with no backups
 	user_file, cp_all_users, dept_members  = get_grouper()
-	dept_dict = return_dept_dict(cp_all_users, dept_members) # Gets a dictionary of all users in Grouper that have an account.
-	count = 0 # Count of users w/ no backup.
+	dept_dict :dict = return_dept_dict(cp_all_users, dept_members) # Gets a dictionary of all users in Grouper that have an account.
+	count :int = 0 # Count of users w/ no backup.
 	for user in return_no_backup(dept_dict):
 		print(user)
 		count += 1
@@ -58,8 +58,9 @@ def main():
 	print("Show users with no account based on grouper: 1\n" # Prints info
 		"Show users with an account but not a backup: 2\n"
 		"Combine 1 and 2: 3\n"
-		"Show users who don't have @andrew.cmu.edu: 4\no")
-	answer = input("1/2/3/4: ") # Gets user input
+		"Show users who don't have @andrew.cmu.edu: 4\no"
+		"Show single user (only andrewID): 5")
+	answer :str = input("1/2/3/4/5: ") # Gets user input
 	start_time = datetime.now() # Beginning of timing. Done here so reading options isn't counted in. 
 	if answer == "1":  			# Unforunately no *easy* way of not including the time taken choosing a file as it's not in this function.
 		print("Checking for users with no account in CrashPlan")
@@ -73,6 +74,10 @@ def main():
 	elif answer == "4":
 		print("Checking for accounts with aliases.")
 		aliases()
+	elif answer == "5":
+		print("Get single user.")
+		single_user :str = input("Enter AndrewID: ")
+		get_single_user(single_user)
 	else:
 		print("Invalid option.")
 	end_time = datetime.now()

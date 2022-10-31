@@ -40,6 +40,7 @@ td, th {
 </style>
 </head>
 <body>
+<center>
 """
 
 	# Add the header part with the given title
@@ -56,7 +57,7 @@ td, th {
 				html_content += "<td>{}</td>".format(column)
 		html_content += "</tr>"
 
-	html_content += """</tr></table></body></html>"""
+	html_content += """</tr></table></center></body></html>"""
 	return html_content
 
 
@@ -107,3 +108,6 @@ class HtmlConvert:
 		title = ""
 		html_string = data_to_html(title, data)
 		write_html_file(html_string, self.html_file)
+
+c = HtmlConvert("IOtemplate.csv", "template.html")
+c.main()

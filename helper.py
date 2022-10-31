@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import py42.sdk
-import csv
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from dotenv import load_dotenv
@@ -8,7 +7,7 @@ import os
 from pathlib import Path
 import py42.sdk
 import csv, re, shutil, tempfile
-
+from csv_to_html import HtmlConvert
 
 dotenv_path = Path("creds.env")
 load_dotenv(dotenv_path=dotenv_path)  # Loads creds from a file in the .gitignore.
@@ -62,7 +61,7 @@ def get_machines(UID):
         user_devices = {}  # Nested dict for user's devices
         for device in devices:
             # if 'OK' in str(device['alertStates']):
-            # 	continue
+            #   continue
             if device["userUid"] == UID:
                 user_devices[device["osHostname"]] = {
                     "Alert_State": device["alertStates"],
@@ -106,10 +105,10 @@ def no_account(department, all_users):  # Gets list of users in dept w/o account
     return return_val
 
 
-def file_dia():  # TK file dialog
+def file_dia(titl="Select a grouper file to check"):  # TK file dialog
     Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
-    filename = (
-        askopenfilename()
+    filename = askopenfilename(
+        title=titl
     )  # show an "Open" dialog box and return the path to the selected file
     return filename
 
@@ -156,7 +155,10 @@ def user_machine_status(
             #     f"Alert: {value['Alert_State']}, OS: {value['Os_Type']}\n"
             # )
     else:
-        return f"User with UID {colored(255,0,0,UID)} does not have a machine associated with them.\n"
+        print(
+            f"User with UID {colored(255,0,0,UID)} does not have a machine associated with them.\n"
+        )
+        return f"User with UID {UID} does not have a machine associated with them.\n"
 
 
 def get_single_user(andrewID):  # For one-off lookups.
@@ -178,5 +180,27 @@ def sed(
             sources.write(re.sub(pattern, repl, line))
 
 
-def write_to_csv(andrewID: str, computers: list = [], other: str = ""):
-    print(f"Andrew: {andrewID} computers: {computers}, other: {other}")
+def write_to_csv(file: str, andrewID: str = "", computers: list = [], other: str = ""):
+    if not file.endswith(".csv"):
+        file += ".csv"
+        html_file = f"{file[:-4]}.html"
+
+    # print(f"Andrew: {andrewID} computers: {computers}, other: {other}")
+    with open(file, "a") as f:
+        if not andrewID:
+            f.write(f"{other}\n")
+        if andrewID:
+            f.write(f"Username:,{andrewID}\n")
+            for computer in computers:
+                for key, value in computer.items():
+                    f.write(f"Computer name:,{key}\n")
+                    f.write(
+                        f"Status:, {value['Status']},  Last_Modified:, {value['Last_Modified'][0:10]}\n"
+                        f"Alert:, {value['Alert']}, OS:, {value['OS']}\n"
+                    )
+    xport = HtmlConvert(file, html_file)
+    xport.main()
+
+
+# write_to_csv("test", other="test,lol,good,one")
+# write_to_csv("test", andrewID="hkirkwoo", computers=["this,", "that", "the other"])

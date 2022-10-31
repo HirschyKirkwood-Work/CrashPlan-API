@@ -20,6 +20,10 @@ def get_grouper():  # Recieves file from user, formats it as needed, get all CP 
 
 def full_report():  # Rename eventually. This function returns the most info to user
     user_file, cp_all_users, dept_members = get_grouper()
+    print(
+        "Enter new file to write data to. Will be created in the .csv format. No Extension"
+    )
+    out_file: str = str(input("Enter File name: "))
     no_acc = no_account(
         dept_members, cp_all_users
     )  # Almost removed this, but not using dept_dict()
@@ -29,15 +33,20 @@ def full_report():  # Rename eventually. This function returns the most info to 
         dept_members
     ):  # here removes the functionality of showing users w/o accounts, lol
         if member in no_acc:
-            print(f"{member} does not have an CrashPlan account.\n")
+            print(
+                f"{colored(255,0,0,member)} does {colored(255,0,0,'NOT')} have an CrashPlan account.\n"
+            )
+            write_to_csv(
+                out_file, other=f"{member} does not have a CrashPlan account.\n"
+            )
             continue
         print(colored(255, 255, 0, member))
         users_machines = user_machine_status(
             cp_all_users[member]
         )  # Gets machine info for each machine associated with user.
         # print(users_machines)
-        if isinstance(users_machines, str):
-            print(users_machines)
+        if isinstance(users_machines, str):  # User doesn't have backup
+            write_to_csv(out_file, other=f"{member}, {users_machines}")
         else:
             for machine in users_machines:
                 for key, value in machine.items():
@@ -54,6 +63,7 @@ def full_report():  # Rename eventually. This function returns the most info to 
                             f"Status: {value['Status']},  Last_Modified: {colored(0,255,0,value['Last_Modified'][0:10])}\n"
                             f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
                         )
+                write_to_csv(out_file, member, users_machines)
 
 
 def no_backup():  # Checks for users with no backups

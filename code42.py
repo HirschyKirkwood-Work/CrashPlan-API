@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from datetime import datetime
 from helper import *
-from csv_to_html import HtmlConvert
 
 # TODO Users with no accounts (done)
 # TODO users with accounts but no backups (done)

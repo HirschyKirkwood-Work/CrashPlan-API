@@ -165,7 +165,11 @@ def get_single_user(andrewID):  # For one-off lookups.
     andrewID = f"{andrewID}@andrew.cmu.edu"
     cp_all_users = get_users()
     print(f"The Status of {andrewID} is:")
-    return_value = user_machine_status(cp_all_users[andrewID])
+    try:
+        return_value = user_machine_status(cp_all_users[andrewID])
+    except KeyError:
+        print(f"{andrewID} Does not have a CrashPlan account.")
+        exit(1)
     # print(r/seturn_value)
     for machine in return_value:
         for key, value in machine.items():

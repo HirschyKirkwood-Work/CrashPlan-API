@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import py42.sdk
 import csv, re, shutil, tempfile
+from csv_to_html import HtmlConvert
 
 dotenv_path = Path("creds.env")
 load_dotenv(dotenv_path=dotenv_path)  # Loads creds from a file in the .gitignore.
@@ -227,6 +228,9 @@ def full_report():  # Rename eventually. This function returns the most info to 
         "Enter new file to write data to. Will be created in the .csv format. No Extension"
     )
     out_file: str = str(input("Enter File name: "))
+    if not out_file.endswith(".csv"):
+        out_file += ".csv"
+        html_file = f"{out_file[:-4]}.html"
     no_acc = no_account(
         dept_members, cp_all_users
     )  # Almost removed this, but not using dept_dict()
@@ -267,10 +271,6 @@ def full_report():  # Rename eventually. This function returns the most info to 
                             f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
                         )
                 write_to_csv(out_file, member, users_machines)
-
-    if not out_file.endswith(".csv"):
-        out_file += ".csv"
-        html_file = f"{out_file[:-4]}.html"
     xport = HtmlConvert(out_file, html_file)
     xport.main()
 

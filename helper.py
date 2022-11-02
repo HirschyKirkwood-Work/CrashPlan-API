@@ -165,7 +165,7 @@ def get_single_user(andrewID):  # For one-off lookups.
     cp_all_users = get_users()
     print(f"The Status of {andrewID} is:")
     return_value = user_machine_status(cp_all_users[andrewID])
-    print(return_value)
+    # print(r/seturn_value)
     for machine in return_value:
         for key, value in machine.items():
             print(f"Computer name: {colored(128,0,128,key)}")

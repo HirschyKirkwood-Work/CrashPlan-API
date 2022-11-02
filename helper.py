@@ -7,7 +7,6 @@ import os
 from pathlib import Path
 import py42.sdk
 import csv, re, shutil, tempfile
-from csv_to_html import HtmlConvert
 
 dotenv_path = Path("creds.env")
 load_dotenv(dotenv_path=dotenv_path)  # Loads creds from a file in the .gitignore.
@@ -148,7 +147,6 @@ def user_machine_status(
                 "OS": {value["Os_Type"]},
             }
             return_list.append(comp_dict)
-            return return_list
             # print(
             #     f"Computer name: {key}\n"
             #     f"Status: {value['Status']},  Last_Modified: {value['Last_Modified'][0:10]}\n"
@@ -159,6 +157,7 @@ def user_machine_status(
             f"User with UID {colored(255,0,0,UID)} does not have a machine associated with them.\n"
         )
         return f"User with UID {UID} does not have a machine associated with them.\n"
+    return return_list
 
 
 def get_single_user(andrewID):  # For one-off lookups.
@@ -166,6 +165,22 @@ def get_single_user(andrewID):  # For one-off lookups.
     cp_all_users = get_users()
     print(f"The Status of {andrewID} is:")
     return_value = user_machine_status(cp_all_users[andrewID])
+    print(return_value)
+    for machine in return_value:
+        for key, value in machine.items():
+            print(f"Computer name: {colored(128,0,128,key)}")
+            if "connection" in value["Alert"][0].lower():
+                print(
+                    # f"Computer name: {key}\n"
+                    f"Status: {value['Status']},  Last_Modified: {colored(255,0,0,value['Last_Modified'][0:10])}\n"
+                    f"Alert: {colored(255,0,0,value['Alert'])}, OS: {value['OS']}\n"
+                )
+            else:
+                print(
+                    # f"Computer name: {key}\n"
+                    f"Status: {value['Status']},  Last_Modified: {colored(0,255,0,value['Last_Modified'][0:10])}\n"
+                    f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
+                )
 
 
 def sed(
@@ -181,10 +196,6 @@ def sed(
 
 
 def write_to_csv(file: str, andrewID: str = "", computers: list = [], other: str = ""):
-    if not file.endswith(".csv"):
-        file += ".csv"
-        html_file = f"{file[:-4]}.html"
-
     # print(f"Andrew: {andrewID} computers: {computers}, other: {other}")
     with open(file, "a") as f:
         if not andrewID:
@@ -198,8 +209,6 @@ def write_to_csv(file: str, andrewID: str = "", computers: list = [], other: str
                         f"Status:, {value['Status']},  Last_Modified:, {value['Last_Modified'][0:10]}\n"
                         f"Alert:, {value['Alert']}, OS:, {value['OS']}\n"
                     )
-    xport = HtmlConvert(file, html_file)
-    xport.main()
 
 
 # write_to_csv("test", other="test,lol,good,one")

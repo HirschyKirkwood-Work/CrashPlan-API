@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from datetime import datetime
 from helper import *
+from csv_to_html import HtmlConvert
 
 # TODO Users with no accounts (done)
 # TODO users with accounts but no backups (done)
@@ -64,6 +65,12 @@ def full_report():  # Rename eventually. This function returns the most info to 
                             f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
                         )
                 write_to_csv(out_file, member, users_machines)
+
+    if not out_file.endswith(".csv"):
+        out_file += ".csv"
+        html_file = f"{out_file[:-4]}.html"
+    xport = HtmlConvert(out_file, html_file)
+    xport.main()
 
 
 def no_backup():  # Checks for users with no backups

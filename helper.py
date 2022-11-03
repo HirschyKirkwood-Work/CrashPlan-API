@@ -8,6 +8,7 @@ from pathlib import Path
 import py42.sdk
 import csv, re, shutil, tempfile
 from csv_to_html import HtmlConvert
+from datetime import date
 
 dotenv_path = Path("creds.env")
 load_dotenv(dotenv_path=dotenv_path)  # Loads creds from a file in the .gitignore.
@@ -34,25 +35,6 @@ def import_users(filename):
 
 
 def get_machines(UID):
-    # Device info dump
-    # 'computerId': 21667277, 'name': 'CL-SGMARTIN-D',
-    # 'osHostname': 'CL-SGMARTIN-D', 'guid': '962847553106330647',
-    # 'type': 'COMPUTER', 'status': 'Active',
-    # 'active': True, 'blocked': False,
-    # 'alertState': 2, 'alertStates': ['CriticalConnectdeptnAlert'],
-    # 'userId': 5665341, 'userUid': 'f6286ad2531aea56',
-    # 'orgId': 537140, 'orgUid': 'ffdf5749-1d54-44e4-8f0e-da3c3c63e68e',
-    # 'computerExtRef': None, 'notes': None,
-    # 'parentComputerId': None,'parentComputerGuid': None,
-    # 'lastConnected': '2022-02-16T18:33:39.479Z','osName': 'win64',
-    # 'osVersdeptn': '10.0.19042','osArch': 'amd64',
-    # 'address': 'REDACTED','remoteAddress': 'REDACTED',
-    # 'javaVersdeptn': '', 'modelInfo': '',
-    # 'timeZone': 'America/New_York',43'versdeptn': 1525200006882,
-    # 'productVersdeptn': '8.8.2','buildVersdeptn': 143,
-    # 'creatdeptnDate': '2020-07-13T10:14:14.594Z','modificatdeptnDate': '2022-10-13T16:14:02.734Z',
-    # 'loginDate': '2022-02-16T15:13:59.460Z', 'service': 'CrashPlan'}
-
     machine_response = SDK.devices.get_all(
         active=True, page_size=20000
     )  # Page size limits are stupid, but necessary, lol
@@ -157,7 +139,7 @@ def user_machine_status(
         print(
             f"User with UID {colored(255,0,0,UID)} does not have a machine associated with them.\n"
         )
-        return f"User with UID {UID} does not have a machine associated with them.\n"
+        return f"This user does not have a machine associated with them.\n"
     return return_list
 
 
@@ -234,7 +216,9 @@ def full_report():  # Rename eventually. This function returns the most info to 
     out_file: str = str(input("Enter File name: "))
     if not out_file.endswith(".csv"):
         out_file += ".csv"
-        html_file = f"{out_file[:-4]}.html"
+    html_file = f"{out_file[:-4]}.html"
+    t_user_file = re.search(r"(.*)/(.*)", user_file).group(2)
+    write_to_csv(out_file, other=f"{t_user_file[:-4]},Last Updated:,{date.today()}")
     no_acc = no_account(
         dept_members, cp_all_users
     )  # Almost removed this, but not using dept_dict()
@@ -275,6 +259,64 @@ def full_report():  # Rename eventually. This function returns the most info to 
                             f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
                         )
                 write_to_csv(out_file, member, users_machines)
+    sed(out_file, "[\[\]'\{\}]+", "")
+    xport = HtmlConvert(out_file, html_file)
+    xport.main()
+
+
+def parse_full(
+    in_file: str, out_file: str
+):  # Rename eventually. This function returns the most info to user
+    cp_all_users = get_users()
+    sed(in_file, r"^\"ldap\",", "")
+    sed(in_file, r"\"sourceId\",\"entityId\"\n", "")
+    sed(in_file, r"^$", "")
+    dept_members = import_users(in_file)
+    if not out_file.endswith(".csv"):
+        out_file += ".csv"
+    write_to_csv(out_file, other=f"{in_file[:-4]},Last Updated:,{date.today()}")
+    html_file = f"{out_file[:-4]}.html"
+    no_acc = no_account(
+        dept_members, cp_all_users
+    )  # Almost removed this, but not using dept_dict()
+    for (
+        member
+    ) in (
+        dept_members
+    ):  # here removes the functionality of showing users w/o accounts, lol
+        if member in no_acc:
+            print(
+                f"{colored(255,0,0,member)} does {colored(255,0,0,'NOT')} have an CrashPlan account.\n"
+            )
+            write_to_csv(
+                out_file, other=f"{member} does not have a CrashPlan account.\n"
+            )
+            continue
+        print(colored(255, 255, 0, member))
+        users_machines = user_machine_status(
+            cp_all_users[member]
+        )  # Gets machine info for each machine associated with user.
+        # print(users_machines)
+        if isinstance(users_machines, str):  # User doesn't have backup
+            write_to_csv(out_file, other=f"{member}, {users_machines}")
+        else:
+            for machine in users_machines:
+                for key, value in machine.items():
+                    print(f"Computer name: {colored(128,0,128,key)}")
+                    if "connection" in value["Alert"][0].lower():
+                        print(
+                            # f"Computer name: {key}\n"
+                            f"Status: {value['Status']},  Last_Modified: {colored(255,0,0,value['Last_Modified'][0:10])}\n"
+                            f"Alert: {colored(255,0,0,value['Alert'])}, OS: {value['OS']}\n"
+                        )
+                    else:
+                        print(
+                            # f"Computer name: {key}\n"
+                            f"Status: {value['Status']},  Last_Modified: {colored(0,255,0,value['Last_Modified'][0:10])}\n"
+                            f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
+                        )
+                write_to_csv(out_file, member, users_machines)
+    sed(out_file, "[\[\]'\{\}]+", "")
     xport = HtmlConvert(out_file, html_file)
     xport.main()
 

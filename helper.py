@@ -136,10 +136,9 @@ def user_machine_status(
             #     f"Alert: {value['Alert_State']}, OS: {value['Os_Type']}\n"
             # )
     else:
-        print(
-            f"User with UID {colored(255,0,0,UID)} does not have a machine associated with them.\n"
-        )
-        return f"This user does not have a machine associated with them.\n"
+        var = colored(255, 0, 0, "NOT")
+        print(f"""This user does {var} have a machine associated with them.\n""")
+        return f"This user does not have a machine associated with them."
     return return_list
 
 
@@ -188,13 +187,13 @@ def write_to_csv(file: str, andrewID: str = "", computers: list = [], other: str
         if not andrewID:
             f.write(f"{other}\n")
         if andrewID:
-            f.write(f"Username:,{andrewID}\n")
+            f.write(f"{andrewID}\n")
             for computer in computers:
                 for key, value in computer.items():
-                    f.write(f"Computer name:,{key}\n")
                     f.write(
-                        f"Status:, {value['Status']},  Last_Modified:, {value['Last_Modified'][0:10]}\n"
-                        f"Alert:, {value['Alert']}, OS:, {value['OS']}\n"
+                        f"{key},"
+                        f"{value['Status']},{value['Last_Modified'][0:10]},"
+                        f"{value['Alert']},{value['OS']}\n"
                     )
 
 
@@ -218,7 +217,10 @@ def full_report():  # Rename eventually. This function returns the most info to 
         out_file += ".csv"
     html_file = f"{out_file[:-4]}.html"
     t_user_file = re.search(r"(.*)/(.*)", user_file).group(2)
-    write_to_csv(out_file, other=f"{t_user_file[:-4]},Last Updated:,{date.today()}")
+    write_to_csv(
+        out_file,
+        other=f"Computer name/AndrewID,Status,Last Backup,Alert(s),Operating System",
+    )
     no_acc = no_account(
         dept_members, cp_all_users
     )  # Almost removed this, but not using dept_dict()
@@ -274,7 +276,10 @@ def parse_full(
     dept_members = import_users(in_file)
     if not out_file.endswith(".csv"):
         out_file += ".csv"
-    write_to_csv(out_file, other=f"{in_file[:-4]},Last Updated:,{date.today()}")
+    write_to_csv(
+        out_file,
+        other=f"User/Computer Name,Status,Last Backup,Alert(s),Operating System",
+    )
     html_file = f"{out_file[:-4]}.html"
     no_acc = no_account(
         dept_members, cp_all_users

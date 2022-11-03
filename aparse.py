@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 from helper import *
+from datetime import datetime
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -69,4 +70,9 @@ def main():
         print("Choose an option. --help")
 
 
-main()
+if __name__ == "__main__":
+    start_time = datetime.now()
+    main()
+    end_time = datetime.now()
+    duration = end_time - start_time
+    print(f"Duration: {colored(0,255,0,str(duration)[:10])}")  # Prints time taken

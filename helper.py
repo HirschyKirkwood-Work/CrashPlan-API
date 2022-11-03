@@ -138,7 +138,7 @@ def user_machine_status(
     else:
         var = colored(255, 0, 0, "NOT")
         print(f"""This user does {var} have a machine associated with them.\n""")
-        return f"This user does not have a machine associated with them."
+        return f"This user does not have a machine associated with them.,,,"
     return return_list
 
 
@@ -187,7 +187,7 @@ def write_to_csv(file: str, andrewID: str = "", computers: list = [], other: str
         if not andrewID:
             f.write(f"{other}\n")
         if andrewID:
-            f.write(f"{andrewID}\n")
+            f.write(f"{andrewID},,,,\n")
             for computer in computers:
                 for key, value in computer.items():
                     f.write(
@@ -234,7 +234,7 @@ def full_report():  # Rename eventually. This function returns the most info to 
                 f"{colored(255,0,0,member)} does {colored(255,0,0,'NOT')} have an CrashPlan account.\n"
             )
             write_to_csv(
-                out_file, other=f"{member} does not have a CrashPlan account.\n"
+                out_file, other=f"{member} does not have a CrashPlan account.,,,\n"
             )
             continue
         print(colored(255, 255, 0, member))

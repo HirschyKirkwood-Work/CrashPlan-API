@@ -17,6 +17,11 @@ def process_csv(csv_file):
 def data_to_html(title, data):
     """Turns a list of lists into an HTML table"""
 
+"""
+tr:nth-child(odd) {
+  background-color: #dddddd;
+}
+"""
     # HTML Headers
     html_content = """
 <html>
@@ -26,10 +31,6 @@ table {
   width: 50%;
   font-family: arial, sans-serif;
   border-collapse: collapse;
-}
-
-tr:nth-child(odd) {
-  background-color: #dddddd;
 }
 
 td, th {

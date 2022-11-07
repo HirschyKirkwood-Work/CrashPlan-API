@@ -53,7 +53,10 @@ args = vars(ap.parse_args())
 # print(args['name'], args['path'])
 def main():
     if args["single"]:
-        get_single_user(args["andrewID"])
+        try:
+            get_single_user(args["andrewID"])
+        except AttributeError:
+            pass
     elif args["all"]:
         if not args["in_file"]:
             print("Please include a file you wish to check.\n./aparse.py -h")

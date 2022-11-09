@@ -320,7 +320,7 @@ def parse_full(
                             f"Status: {value['Status']},  Last_Modified: {colored(0,255,0,value['Last_Modified'][0:10])}\n"
                             f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
                         )
-                write_to_csv(out_file, member, users_machines)
+            write_to_csv(out_file, member, users_machines)
     sed(out_file, "[\[\]'\{\}]+", "")
     xport = HtmlConvert(out_file, html_file)
     xport.main()

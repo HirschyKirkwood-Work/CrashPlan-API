@@ -181,6 +181,14 @@ def sed(
             sources.write(re.sub(pattern, repl, line))
 
 
+def clean_up(s: str):
+    return_value = re.sub("[\[\]'\{\}]+", "", s)
+    return_value = re.sub("OK", "Backing up", return_value)
+    return_value = re.sub("CriticalConnectionAlert", "NOT backing up", return_value)
+    return_value = return_value.rstrip()
+    return return_value
+
+
 def write_to_csv(file: str, andrewID: str = "", computers: list = [], other: str = ""):
     # print(f"Andrew: {andrewID} computers: {computers}, other: {other}")
     with open(file, "a") as f:
@@ -247,13 +255,15 @@ def full_report():  # Rename eventually. This function returns the most info to 
         else:
             for machine in users_machines:
                 for key, value in machine.items():
+                    for (
+                        k,
+                        v,
+                    ) in value.items():
+                        value[k] = clean_up(str(v))
                     print(f"Computer name: {colored(128,0,128,key)}")
-                    if "connection" in value["Alert"][0].lower():
-                        print(
-                            # f"Computer name: {key}\n"
-                            f"Status: {value['Status']},  Last_Modified: {colored(255,0,0,value['Last_Modified'][0:10])}\n"
-                            f"Alert: {colored(255,0,0,value['Alert'])}, OS: {value['OS']}\n"
-                        )
+                    if "not" in value["Alert"].lower():
+                        print_value = f"Status: {value['Status']},  Last_Modified: {colored(255,0,0,value['Last_Modified'][0:10])}\nAlert: {colored(255,0,0,value['Alert'])}, OS: {value['OS']}\n"
+                        print(clean_up(print_value))
                     else:
                         print(
                             # f"Computer name: {key}\n"
@@ -261,7 +271,6 @@ def full_report():  # Rename eventually. This function returns the most info to 
                             f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
                         )
                 write_to_csv(out_file, member, users_machines)
-    sed(out_file, "[\[\]'\{\}]+", "")
     xport = HtmlConvert(out_file, html_file)
     xport.main()
 
@@ -307,8 +316,14 @@ def parse_full(
         else:
             for machine in users_machines:
                 for key, value in machine.items():
+                    for (
+                        k,
+                        v,
+                    ) in value.items():
+                        value[k] = clean_up(str(v))
                     print(f"Computer name: {colored(128,0,128,key)}")
-                    if "connection" in value["Alert"][0].lower():
+                    print(value["Alert"])
+                    if "not" in value["Alert"].lower():
                         print(
                             # f"Computer name: {key}\n"
                             f"Status: {value['Status']},  Last_Modified: {colored(255,0,0,value['Last_Modified'][0:10])}\n"
@@ -316,12 +331,9 @@ def parse_full(
                         )
                     else:
                         print(
-                            # f"Computer name: {key}\n"
-                            f"Status: {value['Status']},  Last_Modified: {colored(0,255,0,value['Last_Modified'][0:10])}\n"
-                            f"Alert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
+                            f"Status: {value['Status']},  Last_Modified: {colored(0,255,0,value['Last_Modified'][0:10])}\nAlert: {colored(0,255,0,value['Alert'])}, OS: {value['OS']}\n"
                         )
             write_to_csv(out_file, member, users_machines)
-    sed(out_file, "[\[\]'\{\}]+", "")
     xport = HtmlConvert(out_file, html_file)
     xport.main()
 

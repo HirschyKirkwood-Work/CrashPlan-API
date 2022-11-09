@@ -287,7 +287,7 @@ def parse_full(
         out_file += ".csv"
     write_to_csv(
         out_file,
-        other=f"User/Computer Name,Status,Last Backup,Alert(s),Operating System",
+        other=f"User/Computer Name,Device Status,Last Backup, Backup Status,Operating System",
     )
     html_file = f"{out_file[:-4]}.html"
     no_acc = no_account(

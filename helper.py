@@ -199,7 +199,7 @@ def write_to_csv(file: str, andrewID: str = "", computers: list = [], other: str
             for computer in computers:
                 for key, value in computer.items():
                     f.write(
-                        f"{key},"
+                        f",{key},"
                         f"{value['Status']},{value['Last_Modified'][0:10]},"
                         f"{value['Alert']},{value['OS']}\n"
                     )
@@ -227,7 +227,7 @@ def full_report():  # Rename eventually. This function returns the most info to 
     t_user_file = re.search(r"(.*)/(.*)", user_file).group(2)
     write_to_csv(
         out_file,
-        other=f"Computer name/AndrewID,Status,Last Backup,Alert(s),Operating System",
+        other=f"AndrewID,Computer Name,Status,Last Backup,Alert(s),Operating System",
     )
     no_acc = no_account(
         dept_members, cp_all_users
@@ -287,7 +287,7 @@ def parse_full(
         out_file += ".csv"
     write_to_csv(
         out_file,
-        other=f"User/Computer Name,Device Status,Last Backup, Backup Status,Operating System",
+        other=f"AndrewID,Computer Name,Device Status,Last Backup, Backup Status,Operating System",
     )
     html_file = f"{out_file[:-4]}.html"
     no_acc = no_account(
@@ -322,7 +322,6 @@ def parse_full(
                     ) in value.items():
                         value[k] = clean_up(str(v))
                     print(f"Computer name: {colored(128,0,128,key)}")
-                    print(value["Alert"])
                     if "not" in value["Alert"].lower():
                         print(
                             # f"Computer name: {key}\n"

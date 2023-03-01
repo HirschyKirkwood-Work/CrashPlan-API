@@ -8,6 +8,7 @@ cd CrashPlan-API
 
 On Mac, I had to use brew to `brew install python-tk` to get the dep to work even though pip does have a package シ 
 
+As above, for Debian doing a `sudo apt install python3-tk -y` will install the correct package.
 # Usage
 
 ## Command Line Flags

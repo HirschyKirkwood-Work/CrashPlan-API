@@ -242,7 +242,7 @@ def full_report():  # Rename eventually. This function returns the most info to 
                 f"{colored(255,0,0,member)} does {colored(255,0,0,'NOT')} have an CrashPlan account.\n"
             )
             write_to_csv(
-                out_file, other=f"{member} does not have a CrashPlan account.,,,\n"
+                out_file, other=f"{member} does not have a CrashPlan account.,,,,,\n"
             )
             continue
         print(colored(255, 255, 0, member))
@@ -303,7 +303,7 @@ def parse_full(
                 f"{colored(255,0,0,member)} does {colored(255,0,0,'NOT')} have an CrashPlan account.\n"
             )
             write_to_csv(
-                out_file, other=f"{member} does not have a CrashPlan account.\n"
+                out_file, other=f"{member} does not have a CrashPlan account.,,,,,\n"
             )
             continue
         print(colored(255, 255, 0, member))

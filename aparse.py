@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
-import argparse
-from helper import *
+import argparse, sys
+from helper import (
+    colored,
+    get_single_user,
+    parse_full,
+)
 from datetime import datetime
 
 # construct the argument parse and parse the arguments
@@ -49,9 +53,13 @@ ap.add_argument(
 )
 args = vars(ap.parse_args())
 
+
 # display a friendly message to the user
 # print(args['name'], args['path'])
 def main():
+    if len(sys.argv) <= 1:
+        print("Please run with --help to see usage.")
+        exit(127)
     if args["single"]:
         try:
             get_single_user(args["andrewID"])

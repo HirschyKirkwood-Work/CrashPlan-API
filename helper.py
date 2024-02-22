@@ -5,10 +5,9 @@ from tkinter.filedialog import askopenfilename
 from dotenv import load_dotenv
 import os
 from pathlib import Path
-import py42.sdk
-import csv, re, shutil, tempfile
+import csv
+import re
 from csv_to_html import HtmlConvert
-from datetime import date
 
 dotenv_path = Path("creds.env")
 load_dotenv(dotenv_path=dotenv_path)  # Loads creds from a file in the .gitignore.
@@ -22,8 +21,8 @@ def colored(r, g, b, text):
     return "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m".format(r, g, b, text)
 
 
-def flatten(l):  # Flattens out nexted list
-    return [item for sublist in l for item in sublist]
+def flatten(lst):  # Flattens out nexted list
+    return [item for sublist in lst for item in sublist]
 
 
 def import_users(filename):

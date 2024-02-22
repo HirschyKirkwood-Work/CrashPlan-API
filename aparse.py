@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import argparse, sys
+import argparse
+import sys
 from helper import (
     colored,
     get_single_user,

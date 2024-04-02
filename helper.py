@@ -5,11 +5,15 @@ from tkinter.filedialog import askopenfilename
 from dotenv import load_dotenv
 import os
 from pathlib import Path
-import csv
-import re
+import py42.sdk
+import csv, re, shutil, tempfile
 from csv_to_html import HtmlConvert
+from datetime import date
 
-dotenv_path = Path("creds.env")
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+dotenv_path = Path(f"{os.path.dirname(os.path.abspath(__file__))}/creds.env")
 load_dotenv(dotenv_path=dotenv_path)  # Loads creds from a file in the .gitignore.
 URL = "https://console.us2.crashplan.com/api/v3/auth/jwt?useBody=true"
 UNAME = os.environ.get("username")
@@ -21,8 +25,8 @@ def colored(r, g, b, text):
     return "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m".format(r, g, b, text)
 
 
-def flatten(lst):  # Flattens out nexted list
-    return [item for sublist in lst for item in sublist]
+def flatten(l):  # Flattens out nexted list
+    return [item for sublist in l for item in sublist]
 
 
 def import_users(filename):
@@ -56,15 +60,6 @@ def get_machines(UID):
             # print(device['alertStates'])
             # return f"Hostname: {device['osHostname']}\nUserID: {device['userId']}\nOperating System: {device['osName']}\nAlert {device['alertStates']}\n"
         return user_devices
-
-
-# {'userId': 28062831, 'userUid': '1060852660876723881', 'status': 'Active', 'username': 'alauth@andrew.cmu.edu',
-#'email': 'alauth@andrew.cmu.edu', 'firstName': 'Aaron', 'lastName': 'Lauth', 'quotaInBytes': -1, 'orgId': 537140,
-#'orgUid': 'ffdf5749-1d54-44e4-8f0e-da3c3c63e68e', 'orgGuid': '89muscpm892chp8c', 'orgName': 'Managed Hardware',
-#'userExtRef': None, 'notes': None, 'active': True, 'blocked': False, 'invited': False, 'orgType': 'ENTERPRISE',
-#'usernameIsAnEmail': True, 'creatdeptnDate': '2022-05-20T16:44:20.249Z', 'modificatdeptnDate': '2022-10-13T16:45:56.372Z',
-#'passwordReset': False, 'localAuthenticatdeptnOnly': False, 'licenses': []}
-
 
 def get_users():
     user_response = SDK.users.get_all(
@@ -194,11 +189,11 @@ def write_to_csv(file: str, andrewID: str = "", computers: list = [], other: str
         if not andrewID:
             f.write(f"{other}\n")
         if andrewID:
-            f.write(f"{andrewID},,,,,\n")
+            # f.write(f"{andrewID},,,,,\n")
             for computer in computers:
                 for key, value in computer.items():
                     f.write(
-                        f",{key},"
+                            f"{andrewID},{key},"
                         f"{value['Status']},{value['Last_Modified'][0:10]},"
                         f"{value['Alert']},{value['OS']}\n"
                     )
@@ -369,7 +364,3 @@ def aliases():  # Gets all users without @andrew
         f"The amount of all Managed Hardware users who have an alias is {colored(255,0,0,count)}\n"
         "This doesn't mean they don't have an actual email associated with their machines and should be checked manually."
     )
-
-
-# write_to_csv("test", other="test,lol,good,one")
-# write_to_csv("test", andrewID="hkirkwoo", computers=["this,", "that", "the other"])
